@@ -12,24 +12,17 @@ function doPost(e) {
     // スタンプなどが送られてきた時
     userMessage = 'やあ'
   }
-  Logger.log('ユーザのメッセージ');
-  Logger.log(userMessage);
 
   // botが覚えている内容を取得
   const botMemoryText = getBotMemoryText();
   // 会話履歴を取得
   const messageHistoryText = getMessageHistoryText();
 
-  Logger.log('ぼっとめもり');
-  Logger.log(botMemoryText);
-
   // ユーザの発言をスプレッドシートに記録
   recordMessage("User", userMessage);
 
   // ChatGPTでボットの発言を生成
   const botMessage = generateBotMessage(userMessage, messageHistoryText, botMemoryText, OPENAI_API_KEY)
-  Logger.log('ぼっとめっせ');
-  Logger.log(botMessage);
 
   // ユーザの発言から「覚えておくべきもの」をChatGPTに抽出させる
   const userPersonalDate = extractUserPersonalData(userMessage, OPENAI_API_KEY)
@@ -169,8 +162,6 @@ function extractUserPersonalData(userMessage, openAiKey) {
     const responseText = response.getContentText();
     const json = JSON.parse(responseText);
     const userData = json['choices'][0]['message']['function_call']['arguments'];
-    Logger.log('っこれやで');
-    Logger.log(userData);
     return userData
 }
 
@@ -222,10 +213,6 @@ function recordUserPersonalDate(data) {
   for (let i = 0; i < jsonData["persons"].length; i++) {
     const person = jsonData["persons"][i];
 
-    Logger.log(person["title"]);
-    Logger.log(person["content"]);
-    Logger.log(person["tips"]);
-    
     // A列にtitle, B列にcontent, C列にtipsを格納
     sheet.appendRow([person["title"], person["content"], person["tips"]]);
   }
